@@ -3,6 +3,7 @@ import java.awt.event.*;
 public class MouseMech implements MouseListener{
     int x;
     int y;
+
     MouseMech(){
         x=0;
         y=0;
@@ -12,6 +13,8 @@ public class MouseMech implements MouseListener{
 ////        setLayout(null);
 ////        setVisible(true);
     }
+
+
     public void mouseClicked(MouseEvent e) {
         x=e.getX();
         y=e.getY();
@@ -19,6 +22,8 @@ public class MouseMech implements MouseListener{
 //        g.setColor(Color.BLUE);
 //        g.fillOval(e.getX(),e.getY(),30,30);
     }
+
+
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
