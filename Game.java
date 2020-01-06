@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 
 public class Game {
@@ -5,10 +6,16 @@ public class Game {
     public int lvl;
     private int[] components;
     Frame frame;
+    Level level;
     public int width;
     public int height;
     public int cols;
     public int rows;
+    public int[] startCoordinates;
+    public char startDir;
+    public int[] finishCoordinates;
+    public int numOfMirrors;
+    public boolean finished;
 
     public List<int[]> laserRoute = new ArrayList<>();
 
@@ -29,14 +36,55 @@ public class Game {
                 map[x][y] = 0;
             }
         }
+        finished = false;
 
+        lvl = 1;
 
-        map[0][rows-1] = 6;
-        map[7][rows-1] = 7;
-        map[cols-1][rows-1] = 1;
+        loadMap();
 
-        generateLaserRoute(0,rows-1, 'e');
+        generateLaserRoute(startCoordinates[0], startCoordinates[1], startDir);
 
+    }
+
+    protected void addObject(int x, int y, int object){
+        if(x < cols && y < rows)
+            map[x][y] = object;
+        refresh();
+    }
+
+    protected void deleteObject(int x, int y){
+        if(x >= 0 && x < cols && y>=0 && y < rows)
+            map[x][y] = 0;
+        refresh();
+    }
+
+    protected void refresh(){
+        laserRoute = new ArrayList<>();
+        this.map = level.map;
+        generateLaserRoute(startCoordinates[0], startCoordinates[1], startDir);
+    }
+
+    protected void finish(){
+        JOptionPane.showMessageDialog(frame, "Congratulations! \n You did it!");
+        finished = false;
+        lvl += 1;
+        loadMap();
+        refresh();
+        frame.getContentPane().repaint();
+    }
+
+    private void loadMap(){
+        level = new Level(this, lvl);
+        this.map = level.map;
+        this.startCoordinates = level.startCoordinates;
+        this.startDir = level.startDir;
+        this.numOfMirrors = level.numOfMirrors;
+    }
+
+    protected void reset(){
+        loadMap();
+        refresh();
+        frame.getContentPane().repaint();
     }
 
     protected void generateLaserRoute(int x, int y, char dir){
@@ -44,9 +92,10 @@ public class Game {
         laserRoute.add(a);
         switch (dir){
             case 'n': {
-                do {
+                if(y>0)y--;
+                while (y > 0 && map[x][y] == 0){
                     y--;
-                } while (y > 0 && map[x][y] == 0);
+                }
                 if(map[x][y] == 10){//SE
                     generateLaserRoute(x,y,'e');
                 }
@@ -56,9 +105,10 @@ public class Game {
             }
             break;
             case 's': {
-                do {
+                if(y<rows-1)y++;
+                while (y < rows-1 && map[x][y] == 0){
                     y++;
-                } while (y < rows-1 && map[x][y] == 0);
+                }
                 if(map[x][y] == 8){//NW
                     generateLaserRoute(x,y,'w');
                 }
@@ -68,9 +118,10 @@ public class Game {
             }
             break;
             case 'w': {
-                do {
+                if(x>0)x--;
+                while (x > 0 && map[x][y] == 0){
                     x--;
-                } while (x > 0 && map[x][y] == 0);
+                }
                 if(map[x][y] == 9){//NE
                     generateLaserRoute(x,y,'n');
                 }
@@ -80,9 +131,10 @@ public class Game {
             }
             break;
             case 'e': {
-                do {
+                if(x<cols-1)x++;
+                while (x < cols-1 && map[x][y] == 0){
                     x++;
-                } while (x < cols-1 && map[x][y] == 0);
+                }
                 if(map[x][y] == 8){//NW
                     generateLaserRoute(x,y,'n');
                 }
@@ -98,12 +150,15 @@ public class Game {
             map[x][y] = 2;
             int[] b = {x, y};
             laserRoute.add(b);
+            finished = true;
         }
         else{
             int[] b = {x, y};
             laserRoute.add(b);
         }
     }
+
+
 
 
 
@@ -119,7 +174,6 @@ public class Game {
 5 - start W
 6 - start E
 7 - ściana
-//TODO
 8 - lustro NW
 9 - lustro NE
 10 - lustro SE

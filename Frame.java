@@ -7,14 +7,7 @@ public class Frame extends JFrame{
     //Window size
     private static final int width = 1024;
     private static final int height = 768;
-
-    private int[][] map;
-    private int screen;
-
-    //GraphicsDisplay gameArea = new GraphicsDisplay();
-    //MouseMech listener = new MouseMech();
-
-
+    
 
     public static void main(String[] args) {
 

@@ -8,10 +8,12 @@ public class InfoListener implements ActionListener {
     private InfoPanel infoPanel;
 
     public void setPanel(InfoPanel infoPanel) {
+
         this.infoPanel = infoPanel;
     }
 
     public InfoListener(Frame frame) {
+
         this.frame = frame;
     }
 
